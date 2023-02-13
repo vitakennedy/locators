@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using LocatorTask.Elements;
 using LocatorTask.PageObject;
+using LocatorTask.WebDriver;
 using NUnit.Framework;
 
 namespace LocatorTask.Tests
@@ -8,29 +9,29 @@ namespace LocatorTask.Tests
     [TestFixture]
     public class Tests : BaseTest
     {
-        private string _subject;
-        private string _addressee;
-        private string _body;
+        private string subject;
+        private string addressee;
+        private string body;
 
-        MainPage _mainPage;
-        InboxPage _inboxPage;
-        MenuItems _menuItems;
-        Header _header;
-        SentPage _sendPage;
-        DraftPage _draftPage;
+        MainPage mainPage;
+        InboxPage inboxPage;
+        MenuItems menuItems;
+        Header header;
+        SentPage sendPage;
+        DraftPage draftPage;
 
         [SetUp]
         public void Setup()
         {
-            _mainPage = new MainPage(_driver);
-            _inboxPage = new InboxPage(_driver);
-            _menuItems = new MenuItems(_driver);
-            _header = new Header(_driver);
-            _sendPage = new SentPage(_driver);
-            _draftPage = new DraftPage(_driver);
-            _addressee = "vitakennedy@gmail.com";
-            _body = "This is draft message";
-            _subject = "draft_subject";
+            mainPage = new MainPage();
+            inboxPage = new InboxPage();
+            menuItems = new MenuItems();
+            header = new Header();
+            sendPage = new SentPage();
+            draftPage = new DraftPage();
+            addressee = "vitakennedy@gmail.com";
+            body = "This is draft message";
+            subject = "draft_subject";
             NavigateToMainPage();
             Login();
         }
@@ -38,79 +39,86 @@ namespace LocatorTask.Tests
         [Test, Order(1)]
         public void IsUserLoggedIn()
         {
-            Assert.IsTrue(_inboxPage.IsWelcomeLabelDisplayed(), "User is not signed in");
+            Assert.IsTrue(inboxPage.IsWelcomeLabelDisplayed(), "User is not signed in");
         }
 
         [Test, Order(2)]
 
         public void IsEmailSavedAsADraft()
         {
-            SaveEmailAsDraft(_subject, _addressee, _body);
+            SaveEmailAsDraft(subject, addressee, body);
             Assert.IsNotNull(NavigateToTheDraftPage().GetDraftSubjects(), "There are no saved drafts on the Draft page");
-            Assert.IsTrue(NavigateToTheDraftPage().IsThereAnyDraft(_subject), "Email is not saved as a draft");
+            Assert.IsTrue(NavigateToTheDraftPage().IsThereAnyDraft(subject), "Email is not saved as a draft");
         }
 
         [Test, Order(3)]
-        public void CheckSubject()
+        public void IsContextMenuDisplayed()
         {
-            SaveEmailAsDraft(_subject, _addressee, _body);
-            Assert.That(NavigateToTheDraftPage().SelectDraftByItsSubject(_subject).Text, Is.EqualTo(_subject), "Subject is not correct");
+            SaveEmailAsDraft(subject, addressee, body);
+            NavigateToTheDraftPage().OpenContextMenu(subject);
+            Assert.IsTrue(draftPage.IsContextMenuDisplayed(), "Context Menu is not displayed");
         }
 
         [Test, Order(4)]
-        public void CheckAddressee()
+        public void CheckSubject()
         {
-            SaveEmailAsDraft(_subject, _addressee, _body);
-            Assert.That(NavigateToTheDraftPage().SelectDraftByItsAddressee(_addressee).Text, Is.EqualTo(_addressee), "Addressee is not correct");
+            SaveEmailAsDraft(subject, addressee, body);
+            Assert.That(NavigateToTheDraftPage().SelectDraftByItsSubject(subject).Text, Is.EqualTo(subject), "Subject is not correct");
         }
 
         [Test, Order(5)]
+        public void CheckAddressee()
+        {
+            SaveEmailAsDraft(subject, addressee, body);
+            Assert.That(NavigateToTheDraftPage().SelectDraftByItsAddressee(addressee).Text, Is.EqualTo(addressee), "Addressee is not correct");
+        }
+
+        [Test, Order(6)]
         public void CheckBody()
         {
-            SaveEmailAsDraft(_subject, _addressee, _body);
-            var messageScreen = NavigateToTheDraftPage().OpenEmailSavedAsDraft(_subject);
+            SaveEmailAsDraft(subject, addressee, body);
+            var messageScreen = NavigateToTheDraftPage().OpenEmailSavedAsDraft(subject);
             messageScreen.SwitchToFrame();
             var actualBodyEmail = messageScreen.GetBodyEmail();
             messageScreen.ExitFromFrame();
             messageScreen.CloseMessageScreen();
-            Assert.That(actualBodyEmail, Is.EqualTo(_body), "Message body is not correct");
-        }
-
-        [Test, Order(6)]
-        public void SentMenuPageContainsSentEmail()
-        {
-            SaveEmailAsDraft(_subject, _addressee, _body);
-            SendEmailFromTheDraftMenu(_subject);
-            Assert.IsTrue(NavigateToTheSentPage().IsThereAnySentEmail(_subject), "Sent email is not exist in the Sent menu page");
+            Assert.That(actualBodyEmail, Is.EqualTo(body), "Message body is not correct");
         }
 
         [Test, Order(7)]
+        public void SentMenuPageContainsSentEmail()
+        {
+            SaveEmailAsDraft(subject, addressee, body);
+            SendEmailFromTheDraftMenu(subject);
+            Assert.IsTrue(NavigateToTheSentPage().IsThereAnySentEmail(subject), "Sent email is not exist in the Sent menu page");
+        }
+
+        [Test, Order(8)]
         public void DraftPageDoesNotContainSentEmail()
         {
-            SaveEmailAsDraft(_subject, _addressee, _body);
-            SendEmailFromTheDraftMenu(_subject);
+            SaveEmailAsDraft(subject, addressee, body);
+            SendEmailFromTheDraftMenu(subject);
             Assert.IsEmpty(NavigateToTheDraftPage().GetDraftSubjects(), "Draft is still exist in the Draft page");
         }
 
         public void Login()
         {
-            _mainPage.NavigateToLoginPage().Login(ConfigurationManager.AppSettings["username"], ConfigurationManager.AppSettings["password"]);
+            mainPage.NavigateToLoginPage().Login(ConfigurationManager.AppSettings["username"], ConfigurationManager.AppSettings["password"]);
         }
 
         public void NavigateToMainPage()
         {
-            _mainPage.OpenProtonMainPage(ConfigurationManager.AppSettings["URL"]);
+            mainPage.OpenProtonMainPage(ConfigurationManager.AppSettings["URL"]);
         }
 
         public void Logout()
         {
-            _header.NavigateToProfileDropDown().Logout();
-
+            header.NavigateToProfileDropDown().Logout();
         }
 
-        public DraftPage NavigateToTheDraftPage() => _menuItems.NavigateToDraftPage();
+        public DraftPage NavigateToTheDraftPage() => menuItems.NavigateToDraftPage();
 
-        public SentPage NavigateToTheSentPage() => _menuItems.NavigateToSentPage();
+        public SentPage NavigateToTheSentPage() => menuItems.NavigateToSentPage();
 
 
         public void SendEmailFromTheDraftMenu(string subject)
@@ -120,7 +128,7 @@ namespace LocatorTask.Tests
 
         public void SaveEmailAsDraft(string subject, string addressee, string body)
         {
-            var newMessageScreen = _menuItems.OpenNewMessageScreen();
+            var newMessageScreen = menuItems.OpenNewMessageScreen();
             newMessageScreen.FillEmail(addressee, subject, body);
             newMessageScreen.CloseMessageScreen();
         }
@@ -129,8 +137,9 @@ namespace LocatorTask.Tests
         {
             if (NavigateToTheDraftPage().GetDraftSubjects().Any())
             {
-                _draftPage.Toolbar.SelectAllEmails();
-                _draftPage.Toolbar.DeleteAllEmails();
+                if (!draftPage.Toolbar.AreAllEmailsSelected())
+                    draftPage.Toolbar.SelectAllEmails();
+                draftPage.Toolbar.DeleteAllEmails();
             }
         }
 
@@ -138,8 +147,9 @@ namespace LocatorTask.Tests
         {
             if (NavigateToTheSentPage().GetSentEmailsSubject().Any())
             {
-                _sendPage.Toolbar.SelectAllEmails();
-                _sendPage.Toolbar.DeleteAllEmails();
+               
+                sendPage.Toolbar.SelectAllEmails();
+                sendPage.Toolbar.DeleteAllEmails();
             }
         }
 

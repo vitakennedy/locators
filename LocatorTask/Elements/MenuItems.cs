@@ -7,7 +7,7 @@ namespace LocatorTask.Elements;
 
 public class MenuItems : BasePage
 {
-    public MenuItems(IWebDriver driver) : base(driver) { }
+    public MenuItems() : base() { }
 
     [FindsBy(How = How.CssSelector, Using = "button[class='button button-large button-solid-norm w100 no-mobile']")]
     private IWebElement newMessageButton;
@@ -20,20 +20,20 @@ public class MenuItems : BasePage
 
     public MessageScreen OpenNewMessageScreen()
     {
-        _waiter.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[class='button button-large button-solid-norm w100 no-mobile']")));
+        waiter.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[class='button button-large button-solid-norm w100 no-mobile']")));
         newMessageButton.Click();
-        return new MessageScreen(_driver);
+        return new MessageScreen();
     }
 
     public DraftPage NavigateToDraftPage()
     {
         draftMenuButton.Click();
-        return new DraftPage(_driver);
+        return new DraftPage();
     }
 
     public SentPage NavigateToSentPage()
     {
         sentMenuButton.Click();
-        return new SentPage(_driver);
+        return new SentPage();
     }
 }

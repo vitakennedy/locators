@@ -6,20 +6,20 @@ namespace LocatorTask.PageObject;
 
 public class MainPage : BasePage
 {
-    public MainPage(IWebDriver driver) : base(driver) { }
+    public MainPage() : base() { }
 
     [FindsBy(How = How.CssSelector, Using = "div.ml-auto a:nth-child(1)")]
     private IWebElement signInButton;
 
     public void OpenProtonMainPage(string url)
     {
-        GetDriver().Navigate().GoToUrl(url);
+        driver.Navigate().GoToUrl(url);
     }
 
     public LoginPage NavigateToLoginPage()
     {
-        _waiter.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.ml-auto a:nth-child(1)")));
+        waiter.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.ml-auto a:nth-child(1)")));
         signInButton.Click();
-        return new LoginPage(_driver);
+        return new LoginPage();
     }
 }

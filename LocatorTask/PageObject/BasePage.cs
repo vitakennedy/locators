@@ -4,36 +4,35 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
 using SeleniumExtras.WaitHelpers;
 using System.Threading;
+using LocatorTask.WebDriver;
+using OpenQA.Selenium.Interactions;
 
 namespace LocatorTask.PageObject;
 
 public abstract class BasePage
 {
-    protected static IWebDriver _driver;
-    protected static WebDriverWait _waiter;
+    protected IWebDriver driver = Browser.GetDriver();
 
-    protected BasePage(IWebDriver driver)
-    {
-        _driver = driver;
-        _waiter = new WebDriverWait(_driver, TimeSpan.FromSeconds(30));
-        PageFactory.InitElements(driver, this);
-    }
+    protected static WebDriverWait waiter;
 
-    public IWebDriver GetDriver()
+    protected static Actions action = new Actions(Browser.GetDriver());
+
+    protected BasePage()
     {
-        return _driver;
+        waiter = new WebDriverWait(Browser.GetDriver(), TimeSpan.FromSeconds(30));
+        PageFactory.InitElements(Browser.GetDriver(), this);
     }
 
     public bool IsElementPresent(By locator)
     {
-        return _driver.FindElements(locator).Count() > 0;
+        return driver.FindElements(locator).Count() > 0;
     }
 
     public static IWebElement WaitUntilElementExists(By elementLocator)
     {
         try
         {
-            return _waiter.Until(ExpectedConditions.ElementExists(elementLocator));
+            return waiter.Until(ExpectedConditions.ElementExists(elementLocator));
         }
         catch (NoSuchElementException)
         {
@@ -42,25 +41,41 @@ public abstract class BasePage
         }
     }
 
+    public static void ClickWithAction(IWebElement element)
+    {
+        
+        action.Click(element).Build().Perform();
+    }
+
+    public static void RightClick(IWebElement element)
+    {
+        action.ContextClick(element).Perform();
+    }
+
+    public void JsClick(IWebElement element)
+    {
+        IJavaScriptExecutor executor = (IJavaScriptExecutor)Browser.GetDriver();
+        executor.ExecuteScript("arguments[0].click();", element);
+    }
+
     public static IWebElement WaitUntilElementVisible(By elementLocator)
     {
         try
         {
-            return _waiter.Until(ExpectedConditions.ElementIsVisible(elementLocator));
+            return waiter.Until(ExpectedConditions.ElementIsVisible(elementLocator));
         }
         catch (NoSuchElementException)
         {
             Console.WriteLine("Element with locator: '" + elementLocator + "' was not found.");
             throw;
         }
-
     }
 
     public static bool WaitUntilUrlToBe(string url)
     {
         try
         {
-            return _waiter.Until(ExpectedConditions.UrlToBe(url));
+            return waiter.Until(ExpectedConditions.UrlToBe(url));
         }
         catch (NoSuchElementException)
         {

@@ -7,7 +7,7 @@ namespace LocatorTask.Elements;
 
 public class ProfileDropDown : BasePage
 {
-    public ProfileDropDown(IWebDriver driver) : base(driver) { }
+    public ProfileDropDown() : base() { }
 
     [FindsBy(How = How.XPath, Using = "//button[text()='Sign out']")]
     private IWebElement signoutButton;

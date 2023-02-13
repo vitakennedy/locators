@@ -9,9 +9,9 @@ namespace LocatorTask.Elements;
 
 public class Toolbar : BasePage
 {
-    public Toolbar(IWebDriver driver) : base(driver) { }
+    public Toolbar() : base() { }
 
-    [FindsBy(How = How.CssSelector, Using = "[for=idSelectAll]")]
+    [FindsBy(How = How.CssSelector, Using = "#idSelectAll")]
     private IWebElement checkboxSelectAll;
 
     [FindsBy(How = How.CssSelector, Using = "button[data-testid='toolbar:movetotrash']")]
@@ -19,14 +19,17 @@ public class Toolbar : BasePage
 
     public void SelectAllEmails()
     {
-        _waiter.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[for=idSelectAll]")));
-        Actions action = new Actions(_driver);
-        action.Click(checkboxSelectAll).Build().Perform();
-        _waiter.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[data-testid='toolbar:movetotrash']")));
+        ClickWithAction(checkboxSelectAll);
+        waiter.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[data-testid='toolbar:movetotrash']")));
     }
 
     public void DeleteAllEmails()
     {
-        deleteAllDraftsButton.Click();
+        JsClick(deleteAllDraftsButton);
+    }
+
+    public bool AreAllEmailsSelected()
+    {
+        return checkboxSelectAll.Selected;
     }
 }

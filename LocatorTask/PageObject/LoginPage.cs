@@ -6,7 +6,7 @@ namespace LocatorTask.PageObject;
 
 public class LoginPage : BasePage
 {
-    public LoginPage(IWebDriver driver) : base(driver)
+    public LoginPage() : base()
     {
     }
 
@@ -21,10 +21,10 @@ public class LoginPage : BasePage
 
     public InboxPage Login(string username, string password)
     {
-        _waiter.Until((_driver) => usernameInputField.Displayed);
+        waiter.Until((_driver) => usernameInputField.Displayed);
         usernameInputField.SendKeys(username);
         passwordInputField.SendKeys(password);
         submitSigninButton.Click();
-        return new InboxPage(_driver);
+        return new InboxPage();
     }
 }

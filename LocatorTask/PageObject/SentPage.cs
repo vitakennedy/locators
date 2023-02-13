@@ -7,9 +7,9 @@ namespace LocatorTask.PageObject;
 
 public class SentPage : BasePage
 {
-    public SentPage(IWebDriver driver) : base(driver)
+    public SentPage() : base()
     {
-        Toolbar = new Toolbar(driver);
+        Toolbar = new Toolbar();
     }
 
     [FindsBy(How = How.CssSelector, Using = ".item-subject span")]
@@ -29,12 +29,12 @@ public class SentPage : BasePage
     public MessageScreen OpenDraft(string subject)
     {
         SelectDraftByItsSubject(subject).Click();
-        return new MessageScreen(GetDriver());
+        return new MessageScreen();
     }
 
     public bool IsThereAnySentEmail(string subject)
     {
-        _waiter.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.CssSelector(".item-subject span")));
+        waiter.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.CssSelector(".item-subject span")));
         return GetSentEmailsSubject().Any(draft => draft.GetAttribute("title") == subject);
     }
 

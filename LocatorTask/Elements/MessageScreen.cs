@@ -7,7 +7,7 @@ namespace LocatorTask.Elements;
 
 public class MessageScreen : BasePage
 {
-    public MessageScreen(IWebDriver driver) : base(driver) { }
+    public MessageScreen() : base() { }
 
     [FindsBy(How = How.CssSelector, Using = "input[placeholder*='Email address']")]
     private IWebElement addresseeInputField;
@@ -29,12 +29,12 @@ public class MessageScreen : BasePage
 
     public void SwitchToFrame()
     {
-        _waiter.Until(ExpectedConditions.FrameToBeAvailableAndSwitchToIt(By.XPath("//iframe[contains(@title,'Email composer')]")));
+        waiter.Until(ExpectedConditions.FrameToBeAvailableAndSwitchToIt(By.XPath("//iframe[contains(@title,'Email composer')]")));
     }
 
     public void ExitFromFrame()
     {
-        _driver.SwitchTo().DefaultContent();
+        driver.SwitchTo().DefaultContent();
     }
 
     public void FillEmail(string addressee, string subject, string body)
@@ -60,6 +60,6 @@ public class MessageScreen : BasePage
     public void SendEmail()
     {
         sendButton.Click();
-        _waiter.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector(".composer-title-bar button:nth-child(4)")));
+        waiter.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector(".composer-title-bar button:nth-child(4)")));
     }
 }

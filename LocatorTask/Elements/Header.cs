@@ -6,7 +6,7 @@ namespace LocatorTask.Elements;
 
 public class Header : BasePage
 {
-    public Header(IWebDriver driver) : base(driver) { }
+    public Header() : base() { }
 
     [FindsBy(How = How.CssSelector, Using = "button.user-dropdown-button")]
     private IWebElement profileButton;
@@ -14,6 +14,6 @@ public class Header : BasePage
     public ProfileDropDown NavigateToProfileDropDown()
     {
         profileButton.Click();
-        return new ProfileDropDown(_driver);
+        return new ProfileDropDown();
     }
 }

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using LocatorTask.WebDriver;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.Configuration;
@@ -7,16 +8,23 @@ using System.Reflection;
 namespace LocatorTask.Tests;
 public class BaseTest
 {
-    protected IWebDriver _driver;
+    protected static Browser Browser;
 
     [OneTimeSetUp]
     public void OneTimeSetup()
     {
-        _driver = new ChromeDriver();
-        _driver.Manage().Window.Maximize();
-        _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(20);
         SetUpConfigFile();
+        Browser = Browser.Instance;
+        Browser.WindowMaximise();
+        Browser.GetDriver().Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
     }
+
+    [OneTimeTearDown]
+    public void TestFinalize()
+    {
+        Browser.Quit();
+    }
+
     protected void SetUpConfigFile()
     {
         var appConfigPath = Assembly.GetExecutingAssembly().Location + ".config";
@@ -40,11 +48,5 @@ public class BaseTest
         activeConfig.Save();
 
         ConfigurationManager.RefreshSection("appSettings");
-    }
-
-    [OneTimeTearDown]
-    public void TestFinalize()
-    {
-        _driver.Close();
     }
 }
