@@ -1,4 +1,5 @@
-﻿using LocatorTask.PageObject;
+﻿using LocatorTask.Entities;
+using LocatorTask.PageObject;
 using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 using SeleniumExtras.WaitHelpers;
@@ -37,13 +38,13 @@ public class MessageScreen : BasePage
         driver.SwitchTo().DefaultContent();
     }
 
-    public void FillEmail(string addressee, string subject, string body)
+    public void FillEmail(Email email)
     {
-        addresseeInputField.SendKeys(addressee);
-        subjectInputField.SendKeys(subject);
+        addresseeInputField.SendKeys(email.Addressee);
+        subjectInputField.SendKeys(email.Subject);
         SwitchToFrame();
         bodyInputField.Clear();
-        bodyInputField.SendKeys(body);
+        bodyInputField.SendKeys(email.Body);
         ExitFromFrame();
     }
 

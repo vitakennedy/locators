@@ -1,6 +1,9 @@
 ﻿using System.Configuration;
+using System.IO;
 using LocatorTask.Elements;
+using LocatorTask.Entities;
 using LocatorTask.PageObject;
+using LocatorTask.Utils;
 using LocatorTask.WebDriver;
 using NUnit.Framework;
 
@@ -30,8 +33,8 @@ namespace LocatorTask.Tests
             sendPage = new SentPage();
             draftPage = new DraftPage();
             addressee = "vitakennedy@gmail.com";
-            body = "This is draft message";
             subject = "draft_subject";
+            body = "This is draft message";
             NavigateToMainPage();
             Login();
         }
@@ -42,13 +45,13 @@ namespace LocatorTask.Tests
             Assert.IsTrue(inboxPage.IsWelcomeLabelDisplayed(), "User is not signed in");
         }
 
-        [Test, Order(2)]
+        [Test, TestCaseSource(nameof(GetDataFromCSV)), Order(2)]
 
-        public void IsEmailSavedAsADraft()
+        public void IsEmailSavedAsADraft( string addressee1, string subject1, string body1)
         {
-            SaveEmailAsDraft(subject, addressee, body);
+            SaveEmailAsDraft(addressee1, subject1, body1);
             Assert.IsNotNull(NavigateToTheDraftPage().GetDraftSubjects(), "There are no saved drafts on the Draft page");
-            Assert.IsTrue(NavigateToTheDraftPage().IsThereAnyDraft(subject), "Email is not saved as a draft");
+            Assert.IsTrue(NavigateToTheDraftPage().IsThereAnyDraft(subject1), "Email is not saved as a draft");
         }
 
         [Test, Order(3)]
@@ -103,7 +106,12 @@ namespace LocatorTask.Tests
 
         public void Login()
         {
-            mainPage.NavigateToLoginPage().Login(ConfigurationManager.AppSettings["username"], ConfigurationManager.AppSettings["password"]);
+           var username= ConfigurationManager.AppSettings["username"];
+           var password= ConfigurationManager.AppSettings["password"];
+
+           mainPage.NavigateToLoginPage().Login(username, password);
+
+           var user = new User(username, password);
         }
 
         public void NavigateToMainPage()
@@ -126,10 +134,11 @@ namespace LocatorTask.Tests
             NavigateToTheDraftPage().OpenEmailSavedAsDraft(subject).SendEmail();
         }
 
-        public void SaveEmailAsDraft(string subject, string addressee, string body)
+        public void SaveEmailAsDraft(string addressee, string subject, string body)
         {
+            var email = new Email(addressee, subject, body);
             var newMessageScreen = menuItems.OpenNewMessageScreen();
-            newMessageScreen.FillEmail(addressee, subject, body);
+            newMessageScreen.FillEmail(email);
             newMessageScreen.CloseMessageScreen();
         }
 
@@ -142,14 +151,24 @@ namespace LocatorTask.Tests
                 draftPage.Toolbar.DeleteAllEmails();
             }
         }
-
         public void DeleteSentEmails()
         {
             if (NavigateToTheSentPage().GetSentEmailsSubject().Any())
             {
-               
                 sendPage.Toolbar.SelectAllEmails();
                 sendPage.Toolbar.DeleteAllEmails();
+            }
+        }
+
+        private static IEnumerable<string[]> GetDataFromCSV()
+        {
+            CsvReader reader = new CsvReader("C:\\Users\\Viktoriia_Sherstiuk\\Desktop\\ATM\\Locators\\Task\\locators\\LocatorTask\\Resources\\data.csv");
+            while (reader.Next())
+            {
+                var column1 = (reader[0]);
+                var column2 = (reader[1]);
+                var column3 = (reader[2]);
+                yield return new string[] { column1, column2, column3 };
             }
         }
 
