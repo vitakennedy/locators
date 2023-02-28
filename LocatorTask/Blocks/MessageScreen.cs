@@ -1,15 +1,14 @@
 ﻿using LocatorTask.Entities;
 using LocatorTask.PageObject;
+using LocatorTask.WebDriver;
 using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 using SeleniumExtras.WaitHelpers;
 
-namespace LocatorTask.Elements;
+namespace LocatorTask.Blocks;
 
 public class MessageScreen : BasePage
 {
-    public MessageScreen() : base() { }
-
     [FindsBy(How = How.CssSelector, Using = "input[placeholder*='Email address']")]
     private IWebElement addresseeInputField;
 
@@ -35,7 +34,7 @@ public class MessageScreen : BasePage
 
     public void ExitFromFrame()
     {
-        driver.SwitchTo().DefaultContent();
+        Browser.GetDriver().SwitchTo().DefaultContent();
     }
 
     public void FillEmail(Email email)

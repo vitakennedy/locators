@@ -6,8 +6,6 @@ namespace LocatorTask.PageObject;
 
 public class InboxPage : BasePage
 {
-    public InboxPage() : base() { }
-
     [FindsBy(How = How.CssSelector, Using = "div[class='mauto text-center max-w30e'] h1")]
     private IWebElement welcomeLabel;
 

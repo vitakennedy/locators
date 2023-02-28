@@ -4,28 +4,27 @@ using OpenQA.Selenium.Interactions;
 using SeleniumExtras.PageObjects;
 using SeleniumExtras.WaitHelpers;
 using System.Xml.Linq;
+using LocatorTask.Elements;
 
-namespace LocatorTask.Elements;
+namespace LocatorTask.Blocks;
 
 public class Toolbar : BasePage
 {
-    public Toolbar() : base() { }
-
     [FindsBy(How = How.CssSelector, Using = "#idSelectAll")]
-    private IWebElement checkboxSelectAll;
+    private Checkbox checkboxSelectAll;
 
     [FindsBy(How = How.CssSelector, Using = "button[data-testid='toolbar:movetotrash']")]
-    private IWebElement deleteAllDraftsButton;
+    private Checkbox deleteAllDraftsButton;
 
     public void SelectAllEmails()
     {
-        ClickWithAction(checkboxSelectAll);
+        checkboxSelectAll.ClickWithAction();
         waiter.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[data-testid='toolbar:movetotrash']")));
     }
 
     public void DeleteAllEmails()
     {
-        JsClick(deleteAllDraftsButton);
+        deleteAllDraftsButton.JsClick();
     }
 
     public bool AreAllEmailsSelected()

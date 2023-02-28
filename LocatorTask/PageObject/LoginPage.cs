@@ -1,4 +1,8 @@
-﻿using OpenQA.Selenium;
+﻿using System.ComponentModel.Design;
+using LocatorTask.Elements;
+using LocatorTask.Utils.Login;
+using LocatorTask.WebDriver;
+using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 using SeleniumExtras.WaitHelpers;
 
@@ -6,25 +10,18 @@ namespace LocatorTask.PageObject;
 
 public class LoginPage : BasePage
 {
-    public LoginPage() : base()
-    {
-    }
-
     [FindsBy(How = How.Id, Using = "username")]
-    private IWebElement usernameInputField;
+    protected IWebElement usernameInputField;
 
     [FindsBy(How = How.Id, Using = "password")]
-    private IWebElement passwordInputField;
+    protected IWebElement passwordInputField;
 
     [FindsBy(How = How.CssSelector, Using = "button[class='button w100 button-large button-solid-norm mt1-5']")]
-    private IWebElement submitSigninButton;
+    protected Button submitSigninButton;
 
-    public InboxPage Login(string username, string password)
+    public InboxPage Login(ILoginStrategy webLogin, string username, string password)
     {
-        waiter.Until((_driver) => usernameInputField.Displayed);
-        usernameInputField.SendKeys(username);
-        passwordInputField.SendKeys(password);
-        submitSigninButton.Click();
+        webLogin.Login(username, password);
         return new InboxPage();
     }
 }

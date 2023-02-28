@@ -1,10 +1,9 @@
 ﻿using System.Configuration;
-using System.IO;
-using LocatorTask.Elements;
+using LocatorTask.Blocks;
 using LocatorTask.Entities;
 using LocatorTask.PageObject;
 using LocatorTask.Utils;
-using LocatorTask.WebDriver;
+using LocatorTask.Utils.Login;
 using NUnit.Framework;
 
 namespace LocatorTask.Tests
@@ -45,8 +44,7 @@ namespace LocatorTask.Tests
             Assert.IsTrue(inboxPage.IsWelcomeLabelDisplayed(), "User is not signed in");
         }
 
-        [Test, TestCaseSource(nameof(GetDataFromCSV)), Order(2)]
-
+        [Test, TestCaseSource(nameof(GetDataFromCsv)), Order(2)]
         public void IsEmailSavedAsADraft( string addressee1, string subject1, string body1)
         {
             SaveEmailAsDraft(addressee1, subject1, body1);
@@ -57,7 +55,7 @@ namespace LocatorTask.Tests
         [Test, Order(3)]
         public void IsContextMenuDisplayed()
         {
-            SaveEmailAsDraft(subject, addressee, body);
+            SaveEmailAsDraft(addressee, subject, body);
             NavigateToTheDraftPage().OpenContextMenu(subject);
             Assert.IsTrue(draftPage.IsContextMenuDisplayed(), "Context Menu is not displayed");
         }
@@ -65,21 +63,21 @@ namespace LocatorTask.Tests
         [Test, Order(4)]
         public void CheckSubject()
         {
-            SaveEmailAsDraft(subject, addressee, body);
+            SaveEmailAsDraft(addressee, subject, body);
             Assert.That(NavigateToTheDraftPage().SelectDraftByItsSubject(subject).Text, Is.EqualTo(subject), "Subject is not correct");
         }
 
         [Test, Order(5)]
         public void CheckAddressee()
         {
-            SaveEmailAsDraft(subject, addressee, body);
+            SaveEmailAsDraft(addressee, subject, body);
             Assert.That(NavigateToTheDraftPage().SelectDraftByItsAddressee(addressee).Text, Is.EqualTo(addressee), "Addressee is not correct");
         }
 
         [Test, Order(6)]
         public void CheckBody()
         {
-            SaveEmailAsDraft(subject, addressee, body);
+            SaveEmailAsDraft(addressee, subject, body);
             var messageScreen = NavigateToTheDraftPage().OpenEmailSavedAsDraft(subject);
             messageScreen.SwitchToFrame();
             var actualBodyEmail = messageScreen.GetBodyEmail();
@@ -91,7 +89,7 @@ namespace LocatorTask.Tests
         [Test, Order(7)]
         public void SentMenuPageContainsSentEmail()
         {
-            SaveEmailAsDraft(subject, addressee, body);
+            SaveEmailAsDraft(addressee, subject, body);
             SendEmailFromTheDraftMenu(subject);
             Assert.IsTrue(NavigateToTheSentPage().IsThereAnySentEmail(subject), "Sent email is not exist in the Sent menu page");
         }
@@ -99,7 +97,7 @@ namespace LocatorTask.Tests
         [Test, Order(8)]
         public void DraftPageDoesNotContainSentEmail()
         {
-            SaveEmailAsDraft(subject, addressee, body);
+            SaveEmailAsDraft(addressee, subject, body);
             SendEmailFromTheDraftMenu(subject);
             Assert.IsEmpty(NavigateToTheDraftPage().GetDraftSubjects(), "Draft is still exist in the Draft page");
         }
@@ -109,7 +107,7 @@ namespace LocatorTask.Tests
            var username= ConfigurationManager.AppSettings["username"];
            var password= ConfigurationManager.AppSettings["password"];
 
-           mainPage.NavigateToLoginPage().Login(username, password);
+           mainPage.NavigateToLoginPage().Login(new UILogin(), username, password);
 
            var user = new User(username, password);
         }
@@ -160,15 +158,15 @@ namespace LocatorTask.Tests
             }
         }
 
-        private static IEnumerable<string[]> GetDataFromCSV()
+        private static IEnumerable<string[]> GetDataFromCsv()
         {
-            CsvReader reader = new CsvReader("C:\\Users\\Viktoriia_Sherstiuk\\Desktop\\ATM\\Locators\\Task\\locators\\LocatorTask\\Resources\\data.csv");
+            var reader = CsvReader.GetReader;
             while (reader.Next())
             {
                 var column1 = (reader[0]);
                 var column2 = (reader[1]);
                 var column3 = (reader[2]);
-                yield return new string[] { column1, column2, column3 };
+                yield return new [] { column1, column2, column3 };
             }
         }
 

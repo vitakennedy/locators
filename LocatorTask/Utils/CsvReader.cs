@@ -1,46 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace LocatorTask.Utils;
 
-namespace LocatorTask.Utils;
+public sealed class CsvReader : IDisposable
+{
+    private static string path = "C:\\Users\\Viktoriia_Sherstiuk\\Desktop\\ATM\\Locators\\Task\\locators\\LocatorTask\\Resources\\data.csv";
+    private string[] currentData;
+    private StreamReader reader;
+    private static CsvReader csvreader;
+    private static readonly object _Lock = new object();
 
-    public class CsvReader : IDisposable
+    private CsvReader()
     {
-        private string path;
-        private string[] currentData;
-        private StreamReader reader;
+        if (!File.Exists(path)) throw new InvalidOperationException("path does not exist");
+        Initialize();
+    }
 
-        public CsvReader(string path)
+    public static CsvReader GetReader
+    {
+        get
         {
-            if (!File.Exists("C:\\Users\\Viktoriia_Sherstiuk\\Desktop\\ATM\\Locators\\Task\\locators\\LocatorTask\\Resources\\data.csv")) throw new InvalidOperationException("path does not exist");
-            this.path = path;
-            Initialize();
-        }
-
-        private void Initialize()
-        {
-            FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-            reader = new StreamReader(stream);
-        }
-
-        public bool Next()
-        {
-            string current = null;
-            if ((current = reader.ReadLine()) == null) return false;
-            currentData = current.Split(',');
-            return true;
-        }
-
-        public string this[int index]
-        {
-            get { return currentData[index]; }
-        }
-
-
-        public void Dispose()
-        {
-            reader.Close();
+            lock (_Lock)
+                return csvreader ??= new CsvReader();
         }
     }
+
+        private void Initialize()
+    {
+        FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+        reader = new StreamReader(stream);
+    }
+
+    public bool Next()
+    {
+        string current = null;
+        if ((current = reader.ReadLine()) == null) return false;
+        currentData = current.Split(',');
+        return true;
+    }
+
+    public string this[int index]
+    {
+        get { return currentData[index]; }
+    }
+
+    public void Dispose()
+    {
+        reader.Close();
+    }
+}

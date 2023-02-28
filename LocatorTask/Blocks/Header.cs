@@ -2,12 +2,10 @@
 using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 
-namespace LocatorTask.Elements;
+namespace LocatorTask.Blocks;
 
 public class Header : BasePage
 {
-    public Header() : base() { }
-
     [FindsBy(How = How.CssSelector, Using = "button.user-dropdown-button")]
     private IWebElement profileButton;
 

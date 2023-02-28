@@ -3,12 +3,10 @@ using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 using SeleniumExtras.WaitHelpers;
 
-namespace LocatorTask.Elements;
+namespace LocatorTask.Blocks;
 
 public class MenuItems : BasePage
 {
-    public MenuItems() : base() { }
-
     [FindsBy(How = How.CssSelector, Using = "button[class='button button-large button-solid-norm w100 no-mobile']")]
     private IWebElement newMessageButton;
 

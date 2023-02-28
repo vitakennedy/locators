@@ -1,40 +1,35 @@
-﻿using LocatorTask.Elements;
-using LocatorTask.WebDriver;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
+﻿using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 using SeleniumExtras.WaitHelpers;
-using System.Configuration;
+using LocatorTask.Blocks;
+using LocatorTask.Elements;
 
 namespace LocatorTask.PageObject;
 
 public class DraftPage : BasePage
 {
-    public DraftPage() : base()
-    {
-        Toolbar = new Toolbar();
-    }
+    public Toolbar Toolbar => new();
 
     [FindsBy(How = How.CssSelector, Using = ".item-subject span")]
-    private IList<IWebElement> draftSubjects;
+    private IList<HtmlElement> draftSubjects;
 
     [FindsBy(How = How.CssSelector, Using = ".item-senders span")]
-    private IList<IWebElement> draftAddressees;
+    private IList<HtmlElement> draftAddressees;
 
     [FindsBy(How = How.ClassName, Using = "dropdown-content")]
     private IWebElement ContextMenuDropDown;
 
-    public IList<IWebElement> GetDraftSubjects() => draftSubjects;
+    public IList<HtmlElement> GetDraftSubjects() => draftSubjects;
 
-    public IList<IWebElement> GetDraftAddressees() => draftAddressees;
+    public IList<HtmlElement> GetDraftAddressees() => draftAddressees;
 
-    public IWebElement SelectDraftByItsSubject(string subject)
+    public HtmlElement SelectDraftByItsSubject(string subject)
     {
         waiter.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.CssSelector(".item-subject span")));
         return GetDraftSubjects().ToList().FirstOrDefault(draft => draft.Text == subject);
     }
-  
-    public IWebElement SelectDraftByItsAddressee(string addressee) =>
+
+    public HtmlElement SelectDraftByItsAddressee(string addressee) =>
         GetDraftAddressees().FirstOrDefault(draft => draft.GetAttribute("title") == addressee);
 
     public bool IsThereAnyDraft(string subject) =>
@@ -48,7 +43,7 @@ public class DraftPage : BasePage
 
     public void OpenContextMenu(string subject)
     {
-        RightClick(SelectDraftByItsSubject(subject));
+        SelectDraftByItsSubject(subject).RightClick();
     }
 
     public bool IsContextMenuDisplayed()
@@ -56,6 +51,4 @@ public class DraftPage : BasePage
         waiter.Until(ExpectedConditions.ElementIsVisible(By.ClassName("dropdown-content")));
         return ContextMenuDropDown.Displayed;
     }
-
-    public Toolbar Toolbar { get; set; }
 }

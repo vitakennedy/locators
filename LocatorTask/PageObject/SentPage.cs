@@ -1,4 +1,5 @@
-﻿using LocatorTask.Elements;
+﻿using LocatorTask.Blocks;
+using LocatorTask.Elements;
 using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 using SeleniumExtras.WaitHelpers;
@@ -7,10 +8,7 @@ namespace LocatorTask.PageObject;
 
 public class SentPage : BasePage
 {
-    public SentPage() : base()
-    {
-        Toolbar = new Toolbar();
-    }
+    public Toolbar Toolbar = new();
 
     [FindsBy(How = How.CssSelector, Using = ".item-subject span")]
     private IList<IWebElement> sentEmailSubjects;
@@ -18,8 +16,7 @@ public class SentPage : BasePage
     [FindsBy(How = How.CssSelector, Using = ".item-senders span")]
     private IList<IWebElement> draftAddressees;
 
-    public IList<IWebElement> GetSentEmailsSubject() => sentEmailSubjects; 
-
+    public IList<IWebElement> GetSentEmailsSubject() => sentEmailSubjects;
 
     public IList<IWebElement> GetDraftAddressees() => draftAddressees;
 
@@ -37,6 +34,4 @@ public class SentPage : BasePage
         waiter.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.CssSelector(".item-subject span")));
         return GetSentEmailsSubject().Any(draft => draft.GetAttribute("title") == subject);
     }
-
-    public Toolbar Toolbar { get; set; }
 }

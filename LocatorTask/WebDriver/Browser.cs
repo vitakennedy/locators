@@ -20,7 +20,7 @@ public class Browser
     private Browser()
     {
         InitParamas();
-        driver = BrowserFactory.GetDriver(CurrentBrowser, 1000);
+        driver = BrowserFactory.InitBrowser(CurrentBrowser, 1000);
     }
 
     private static void InitParamas()

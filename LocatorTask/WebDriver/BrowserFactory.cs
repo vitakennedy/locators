@@ -14,7 +14,7 @@ public class BrowserFactory
         remoteChrome
     }
 
-    public static IWebDriver GetDriver(BrowserType type, int timeOutSec)
+    public static IWebDriver InitBrowser(BrowserType type, int timeOutSec)
     {
         IWebDriver driver = null;
 
@@ -36,19 +36,19 @@ public class BrowserFactory
                 break;
             }
             case BrowserType.remoteFirefox:
-                {
-                    var options = new FirefoxOptions();
-                    driver = new RemoteWebDriver(new Uri("http://localhost:5566/wd/hub"), options.ToCapabilities(), TimeSpan.FromMinutes(3));
-                    break;
-                }
+            {
+                var options = new FirefoxOptions();
+                driver = new RemoteWebDriver(new Uri("http://localhost:5566/wd/hub"), options.ToCapabilities(), TimeSpan.FromMinutes(3));
+                break;
+            }
             case BrowserType.remoteChrome:
-                {
-                    var option = new ChromeOptions();
-                    option.AddArgument("disable-infobars");
-                    option.AddArgument("--no-sandbox");
-                    driver = new RemoteWebDriver(new Uri("http://localhost:5566/wd/hub"), option.ToCapabilities());
-                    break;
-                }
+            {
+                var option = new ChromeOptions();
+                option.AddArgument("disable-infobars");
+                option.AddArgument("--no-sandbox");
+                driver = new RemoteWebDriver(new Uri("http://localhost:5566/wd/hub"), option.ToCapabilities());
+                break;
+            }
         }
 
         return driver;
