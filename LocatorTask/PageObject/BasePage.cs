@@ -3,18 +3,23 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
 using SeleniumExtras.WaitHelpers;
 using LocatorTask.WebDriver;
+using System.Security.Policy;
 
 namespace LocatorTask.PageObject;
 
 public abstract class BasePage
 {
-    protected static WebDriverWait waiter;
-
+    public static WebDriverWait waiter;
 
     protected BasePage()
     {
         waiter = new WebDriverWait(Browser.GetDriver(), TimeSpan.FromSeconds(30));
         PageFactory.InitElements(Browser.GetDriver(), this);
+    }
+
+    public static bool IsPageUrlContaining(string url)
+    {
+        return Browser.GetDriver().Url.EndsWith(url);
     }
 
     public bool IsElementPresent(By locator)

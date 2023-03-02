@@ -4,6 +4,7 @@ using LocatorTask.Entities;
 using LocatorTask.PageObject;
 using LocatorTask.Utils;
 using LocatorTask.Utils.Login;
+using LocatorTask.WebDriver;
 using NUnit.Framework;
 
 namespace LocatorTask.Tests
@@ -114,7 +115,7 @@ namespace LocatorTask.Tests
 
         public void NavigateToMainPage()
         {
-            mainPage.OpenProtonMainPage(ConfigurationManager.AppSettings["URL"]);
+           Browser.NavigateTo(ConfigurationManager.AppSettings["URL"]);
         }
 
         public void Logout()

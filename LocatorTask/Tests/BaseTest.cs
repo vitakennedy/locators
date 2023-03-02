@@ -5,13 +5,13 @@ using NUnit.Framework;
 namespace LocatorTask.Tests;
 public class BaseTest
 {
-    protected static Browser Browser;
+    protected static Browser BrowserInstance;
 
     [OneTimeSetUp]
     public void OneTimeSetup()
     {
         Config.SetUpConfigFile();
-        Browser = Browser.Instance;
+        BrowserInstance = Browser.Instance;
         Browser.WindowMaximise();
         Browser.GetDriver().Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
     }

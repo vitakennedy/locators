@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 namespace LocatorTask.WebDriver;
 public class Browser
 {
-
     private static Browser currentInstane;
     private static IWebDriver driver;
     public static BrowserFactory.BrowserType CurrentBrowser;
