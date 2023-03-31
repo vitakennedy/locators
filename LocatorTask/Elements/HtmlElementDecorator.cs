@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using LocatorTask.Utils;
 using LocatorTask.WebDriver;
+using Microsoft.CSharp.RuntimeBinder;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 
@@ -38,7 +40,19 @@ namespace LocatorTask.Elements;
 
     public void Click()
     {
-        WrappedElement.Click();
+        try
+        {
+            WrappedElement.Click();
+        }
+        catch (Exception e)
+        {
+            if (e is RuntimeBinderException || e is ElementClickInterceptedException)
+                Logger.Warn($@"'RuntimeBinderException - {e.Message}' caught. 
+                    Execute scrollIntoView js and click once again.");
+            (Browser.GetDriver() as IJavaScriptExecutor).
+                ExecuteScript("arguments[0].scrollIntoView(false)");
+            WrappedElement.Click();
+        }
     }
 
     public IWebElement FindElement(By by)

@@ -12,14 +12,18 @@
     <PackageReference Include="DotNetSeleniumExtras.PageObjects" Version="3.11.0" />
     <PackageReference Include="DotNetSeleniumExtras.PageObjects.Core" Version="4.3.0" />
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
+    <PackageReference Include="log4net" Version="2.0.15" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     <PackageReference Include="NUnit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
+    <PackageReference Include="ReportPortal.Log4Net" Version="2.0.0" />
+    <PackageReference Include="ReportPortal.SpecFlow" Version="3.5.1" />
+    <PackageReference Include="ReportUnit" Version="1.2.1" />
     <PackageReference Include="Selenium.Support" Version="4.8.0" />
     <PackageReference Include="Selenium.WebDriver" Version="4.8.0" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="109.0.5414.7400" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="111.0.5563.6400" />
     <PackageReference Include="Selenium.WebDriver.GeckoDriver" Version="0.32.2" />
     <PackageReference Include="SpecFlow" Version="3.9.74" />
     <PackageReference Include="SpecFlow.NUnit" Version="3.9.74" />
@@ -28,16 +32,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Utils\Logger.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="App.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ReportPortal.config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\data.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="SpecFlow\Hooks\" />
   </ItemGroup>
 
 </Project>

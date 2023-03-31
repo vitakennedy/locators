@@ -131,19 +131,19 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute(": Negative | Check that user is able to login")]
+        [NUnit.Framework.DescriptionAttribute(": Negative | Check that user is not able to login")]
         [NUnit.Framework.TestCaseAttribute("only special characters in login", "!@#$%^&*", "password", null)]
         [NUnit.Framework.TestCaseAttribute("login in both upper and lower case", "USERname", "password", null)]
         [NUnit.Framework.TestCaseAttribute("1 letter in password", "vitakennedy1", "2", null)]
         [NUnit.Framework.TestCaseAttribute("only numbers in password", "vitakennedy3", "1234567", null)]
-        public void NegativeCheckThatUserIsAbleToLogin(string login, string username, string password, string[] exampleTags)
+        public void NegativeCheckThatUserIsNotAbleToLogin(string login, string username, string password, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             argumentsOfScenario.Add("login", login);
             argumentsOfScenario.Add("username", username);
             argumentsOfScenario.Add("password", password);
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo(": Negative | Check that user is able to login", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo(": Negative | Check that user is not able to login", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 20
 this.ScenarioInitialize(scenarioInfo);
 #line hidden

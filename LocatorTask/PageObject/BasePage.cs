@@ -3,7 +3,7 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
 using SeleniumExtras.WaitHelpers;
 using LocatorTask.WebDriver;
-using System.Security.Policy;
+using LocatorTask.Utils;
 
 namespace LocatorTask.PageObject;
 
@@ -19,6 +19,7 @@ public abstract class BasePage
 
     public static bool IsPageUrlContaining(string url)
     {
+       //WaitUntilUrlContains(url);
         return Browser.GetDriver().Url.EndsWith(url);
     }
 
@@ -53,14 +54,15 @@ public abstract class BasePage
         }
     }
 
-    public static bool WaitUntilUrlToBe(string url)
+    public static bool WaitUntilUrlContains(string url)
     {
         try
         {
-            return waiter.Until(ExpectedConditions.UrlToBe(url));
+            return waiter.Until(ExpectedConditions.UrlContains(url));
         }
-        catch (NoSuchElementException)
+        catch (NoSuchElementException timeoutException)
         {
+            Logger.Warn($"Error occurred during page loading: {timeoutException}");
             Console.WriteLine("Page with URL: '" + url + "' is not open.");
             throw;
         }

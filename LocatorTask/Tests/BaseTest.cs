@@ -10,7 +10,7 @@ public class BaseTest
     [OneTimeSetUp]
     public void OneTimeSetup()
     {
-        Config.SetUpConfigFile();
+        //Config.SetUpConfigFile();
         BrowserInstance = Browser.Instance;
         Browser.WindowMaximise();
         Browser.GetDriver().Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);

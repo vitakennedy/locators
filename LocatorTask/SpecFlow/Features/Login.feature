@@ -17,7 +17,7 @@ Scenario Outline:: Check that user is able to login
  | login         | username              | password   |
  | correct login | vitaktoriia@proton.me | V_1234567* |
 
-Scenario Outline:: Negative | Check that user is able to login 
+Scenario Outline:: Negative | Check that user is not able to login 
 	When an user submits '<username>' and '<password>'
 	Then an user should not be redirected to the 'Inbox' page 
 	But an user should stay on the 'Sign in' page

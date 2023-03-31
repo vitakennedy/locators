@@ -4,11 +4,8 @@ using LocatorTask.Tests;
 using LocatorTask.Utils.Login;
 using NUnit.Framework;
 using System.Configuration;
-using System.Security.Policy;
 using LocatorTask.WebDriver;
 using TechTalk.SpecFlow;
-using OpenQA.Selenium.Support.UI;
-using LocatorTask.Elements;
 
 namespace LocatorTask.SpecFlow.Steps
 {

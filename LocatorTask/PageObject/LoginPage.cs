@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.Design;
-using LocatorTask.Elements;
-using LocatorTask.Utils.Login;
-using LocatorTask.WebDriver;
-using OpenQA.Selenium;
+﻿using LocatorTask.Elements;
+using LocatorTask.Utils;
+using LocatorTask.Utils.Login;using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 
 namespace LocatorTask.PageObject;
@@ -23,7 +21,9 @@ public class LoginPage : BasePage
 
     public InboxPage Login(ILoginStrategy webLogin, string username, string password)
     {
+        Logger.Info($"User is logging to application with username {username} and password {password}");
         webLogin.Login(username, password);
+        Logger.Info($"User is redirecting to Inbox page");
         return new InboxPage();
     }
     public bool IsLabelDisplayed() => SignInLabel.Displayed;

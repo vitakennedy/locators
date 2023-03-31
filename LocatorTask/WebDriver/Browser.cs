@@ -1,10 +1,6 @@
 ﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LocatorTask.Utils;
 
 namespace LocatorTask.WebDriver;
 public class Browser
@@ -32,11 +28,13 @@ public class Browser
 
     public static void WindowMaximise()
     {
+        Logger.Info("Maximize Browser");
         driver.Manage().Window.Maximize();
     }
 
     public static void NavigateTo(string url)
     {
+        Logger.Info($"Open url: {url}");
         driver.Navigate().GoToUrl(url);
     }
 
@@ -47,6 +45,7 @@ public class Browser
 
     public static void Quit()
     {
+        Logger.Info("Quit Browser");
         driver.Quit();
         currentInstane = null;
         driver = null;
